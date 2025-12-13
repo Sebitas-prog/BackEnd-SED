@@ -3,9 +3,9 @@ package com.sed.backend.domain.entities.evaluacion;
 import jakarta.persistence.*;
 import lombok.*;
 import com.sed.backend.domain.entities.academico.Matricula;
+import com.sed.backend.domain.entities.academico.Periodo;
 import com.sed.backend.domain.entities.academico.Seccion;
 import com.sed.backend.domain.entities.base.AuditableEntity;
-import com.sed.backend.domain.enums.CanalEnum;
 import com.sed.backend.domain.enums.EstadoEvaluacionEnum;
 
 import java.time.LocalDateTime;
@@ -37,9 +37,8 @@ public class Evaluacion extends AuditableEntity {
     @Column(name = "estado", nullable = false)
     private EstadoEvaluacionEnum estado;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "canal", nullable = false)
-    private CanalEnum canal;
+    private String canal;
 
     @Column(name = "completado_en")
     private LocalDateTime completadoEn;
@@ -47,4 +46,9 @@ public class Evaluacion extends AuditableEntity {
     @OneToMany(mappedBy = "evaluacion", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Respuesta> respuestas = new HashSet<>();
+
+    // Método agregado para obtener el periodo desde la sección
+    public Periodo getPeriodo() {
+        return seccion != null ? seccion.getPeriodo() : null;
+    }
 }

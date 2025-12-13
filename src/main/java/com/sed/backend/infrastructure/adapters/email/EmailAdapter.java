@@ -29,4 +29,10 @@ public class EmailAdapter {
         String contenido = templateService.renderTemplate(templatePath, variables);
         enviarTextoPlano(to, subject, contenido);
     }
+
+    // Método agregado para compatibilidad con EmailVerificationServiceImpl y
+    // NotificacionServiceImpl
+    public void enviarEmail(String to, String subject, String templatePath, Map<String, Object> variables) {
+        enviarConTemplate(to, subject, "templates/" + templatePath + ".html", variables);
+    }
 }

@@ -23,4 +23,7 @@ public class Pregunta extends AuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "criterio_id")
     private Criterio criterio;
+
+    // Nota: Lombok genera automáticamente el método id() en el Builder
+    // Si aún tienes problemas, asegúrate de tener las anotaciones correctas
 }

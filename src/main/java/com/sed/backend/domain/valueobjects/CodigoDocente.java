@@ -1,38 +1,35 @@
 package com.sed.backend.domain.valueobjects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
 
-/**
- * Value Object para Código de Docente
- * Formato esperado: letras y números, 6-12 caracteres
- */
 @Getter
 @EqualsAndHashCode
+@Embeddable
+@NoArgsConstructor
 public class CodigoDocente {
 
     private static final Pattern CODIGO_PATTERN = Pattern.compile("^[A-Z0-9]{6,12}$");
     private static final int MIN_LENGTH = 6;
     private static final int MAX_LENGTH = 12;
 
-    private final String valor;
+    @Column(name = "codigo_docente")
+    private String valor;
 
     private CodigoDocente(String valor) {
         this.valor = valor;
     }
 
-    /**
-     * Factory method para crear un Código de Docente
-     * 
-     * @param codigo Código a validar
-     * @return CodigoDocente válido
-     * @throws IllegalArgumentException si el código no es válido
-     */
     public static CodigoDocente of(String codigo) {
         validar(codigo);
-        return new CodigoDocente(codigo.toUpperCase().trim());
+        CodigoDocente codigoDocente = new CodigoDocente();
+        codigoDocente.valor = codigo.toUpperCase().trim();
+        return codigoDocente;
     }
 
     private static void validar(String codigo) {
@@ -42,8 +39,7 @@ public class CodigoDocente {
 
         String codigoNormalizado = codigo.toUpperCase().trim();
 
-        if (codigoNormalizado.length() < MIN_LENGTH ||
-                codigoNormalizado.length() > MAX_LENGTH) {
+        if (codigoNormalizado.length() < MIN_LENGTH || codigoNormalizado.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(
                     String.format("El código debe tener entre %d y %d caracteres",
                             MIN_LENGTH, MAX_LENGTH));
@@ -55,9 +51,6 @@ public class CodigoDocente {
         }
     }
 
-    /**
-     * Verifica si el código es válido sin lanzar excepción
-     */
     public static boolean esValido(String codigo) {
         try {
             validar(codigo);

@@ -16,8 +16,8 @@ public class ValidationExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse>> handleValidation(Exception ex) {
         String message = "Solicitud inválida";
         ErrorResponse error = ErrorResponse.builder()
-                .code("VALIDATION_ERROR")
-                .message(message)
+                .error("VALIDATION_ERROR")
+                .detail(message)
                 .build();
         ApiResponse<ErrorResponse> body = ApiResponse.<ErrorResponse>builder()
                 .success(false)

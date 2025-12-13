@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.sed.backend.domain.entities.base.AuditableEntity;
 import com.sed.backend.domain.enums.EstadoPeriodoEnum;
+import com.sed.backend.domain.valueobjects.RangoFechas;
 
 import java.time.LocalDate;
 
@@ -28,4 +29,17 @@ public class Periodo extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
     private EstadoPeriodoEnum estado;
+
+    // Método agregado para obtener el rango de fechas
+    public RangoFechas getRangoFechas() {
+        return RangoFechas.of(fechaInicio, fechaFin);
+    }
+
+    // Método para establecer el rango de fechas
+    public void setRangoFechas(RangoFechas rangoFechas) {
+        if (rangoFechas != null) {
+            this.fechaInicio = rangoFechas.getFechaInicio();
+            this.fechaFin = rangoFechas.getFechaFin();
+        }
+    }
 }

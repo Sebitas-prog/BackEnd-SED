@@ -3,6 +3,7 @@ package com.sed.backend.domain.entities.evaluacion;
 import jakarta.persistence.*;
 import lombok.*;
 import com.sed.backend.domain.entities.base.AuditableEntity;
+import com.sed.backend.domain.valueobjects.Calificacion;
 
 @Getter
 @Setter
@@ -21,13 +22,26 @@ public class Respuesta extends AuditableEntity {
     @JoinColumn(name = "pregunta_id", nullable = false)
     private Pregunta pregunta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "opcion_escala_id")
-    private OpcionEscala opcionEscala;
-
     @Column(name = "valor_calificacion")
     private Integer valorCalificacion;
 
-    @Column(name = "observacion")
-    private String observacion;
+    @Column(name = "comentario")
+    private String comentario;
+
+    @Transient
+    public Calificacion getCalificacion() {
+        return valorCalificacion != null ? Calificacion.of(valorCalificacion) : null;
+    }
+
+    public void setCalificacion(Calificacion calificacion) {
+        this.valorCalificacion = calificacion != null ? calificacion.getValor() : null;
+    }
+
+    // Clase Builder personalizada para soportar Calificacion
+    public static class RespuestaBuilder {
+        public RespuestaBuilder calificacion(Calificacion calificacion) {
+            this.valorCalificacion = calificacion != null ? calificacion.getValor() : null;
+            return this;
+        }
+    }
 }

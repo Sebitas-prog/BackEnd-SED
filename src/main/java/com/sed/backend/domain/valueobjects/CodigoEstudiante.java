@@ -5,14 +5,12 @@ import jakarta.persistence.Embeddable;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-/**
- * Value Object para Código de Estudiante.
- * Formato esperado: números de 8-10 dígitos.
- */
 @Getter
 @EqualsAndHashCode
 @Embeddable
+@NoArgsConstructor
 public class CodigoEstudiante {
 
     private static final Pattern CODIGO_PATTERN = Pattern.compile("^\\d{8,10}$");
@@ -20,22 +18,17 @@ public class CodigoEstudiante {
     private static final int MAX_LENGTH = 10;
 
     @Column(name = "codigo_estudiante")
-    private final String valor;
+    private String valor;
 
     private CodigoEstudiante(String valor) {
         this.valor = valor;
     }
 
-    /**
-     * Crea un Código de Estudiante validando formato y longitud.
-     *
-     * @param codigo Código a validar
-     * @return CodigoEstudiante válido
-     * @throws IllegalArgumentException si el código no es válido
-     */
     public static CodigoEstudiante of(String codigo) {
         validar(codigo);
-        return new CodigoEstudiante(codigo.trim());
+        CodigoEstudiante codigoEstudiante = new CodigoEstudiante();
+        codigoEstudiante.valor = codigo.trim();
+        return codigoEstudiante;
     }
 
     private static void validar(String codigo) {
@@ -52,21 +45,14 @@ public class CodigoEstudiante {
         }
 
         if (!CODIGO_PATTERN.matcher(codigoLimpio).matches()) {
-            throw new IllegalArgumentException(
-                    "El código solo puede contener números");
+            throw new IllegalArgumentException("El código solo puede contener números");
         }
     }
 
-    /**
-     * Obtiene el año de ingreso (primeros 4 dígitos).
-     */
     public String getAnioIngreso() {
-        return valor.substring(0, 4);
+        return valor != null && valor.length() >= 4 ? valor.substring(0, 4) : "";
     }
 
-    /**
-     * Verifica si el código es válido sin lanzar excepción.
-     */
     public static boolean esValido(String codigo) {
         try {
             validar(codigo);

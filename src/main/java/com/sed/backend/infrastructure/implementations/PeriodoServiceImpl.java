@@ -21,7 +21,8 @@ public class PeriodoServiceImpl {
     public Periodo crearPeriodo(String nombre, RangoFechas rango, EstadoPeriodoEnum estado) {
         Periodo periodo = Periodo.builder()
                 .nombre(nombre)
-                .rangoFechas(rango)
+                .fechaInicio(rango.getFechaInicio())
+                .fechaFin(rango.getFechaFin())
                 .estado(estado)
                 .build();
         return periodoRepository.save(periodo);

@@ -14,11 +14,11 @@ import com.sed.backend.domain.entities.evaluacion.Instrumento;
 import com.sed.backend.domain.entities.evaluacion.Pregunta;
 import com.sed.backend.domain.entities.evaluacion.Respuesta;
 import com.sed.backend.domain.enums.EstadoEvaluacionEnum;
-import com.sed.backend.domain.valueobjects.Calificacion;
 import com.sed.backend.infrastructure.implementations.EvaluacionServiceImpl;
 import com.sed.backend.infrastructure.implementations.InstrumentoServiceImpl;
 import com.sed.backend.infrastructure.persistence.repositories.CanalRepository;
 import com.sed.backend.infrastructure.persistence.repositories.MatriculaRepository;
+import com.sed.backend.infrastructure.persistence.repositories.PreguntaRepository;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -33,6 +33,7 @@ public class CreateEvaluacionUseCase {
     private final InstrumentoServiceImpl instrumentoService;
     private final MatriculaRepository matriculaRepository;
     private final CanalRepository canalRepository;
+    private final PreguntaRepository preguntaRepository;
     private final EvaluacionValidator evaluacionValidator;
 
     @Transactional
@@ -71,12 +72,14 @@ public class CreateEvaluacionUseCase {
     private Set<Respuesta> construirRespuestas(Iterable<RespuestaRequest> requests) {
         Set<Respuesta> respuestas = new HashSet<>();
         for (RespuestaRequest respuestaRequest : requests) {
-            Pregunta pregunta = Pregunta.builder()
-                    .id(respuestaRequest.getPreguntaId())
-                    .build();
+            // Buscar la pregunta en la base de datos en lugar de construirla
+            Pregunta pregunta = preguntaRepository.findById(respuestaRequest.getPreguntaId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Pregunta no encontrada: " + respuestaRequest.getPreguntaId()));
+
             Respuesta respuesta = Respuesta.builder()
                     .pregunta(pregunta)
-                    .calificacion(Calificacion.of(respuestaRequest.getValor()))
+                    .valorCalificacion(respuestaRequest.getValor())
                     .comentario(respuestaRequest.getComentario())
                     .build();
             respuestas.add(respuesta);

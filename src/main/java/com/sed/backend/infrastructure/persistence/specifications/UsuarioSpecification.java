@@ -34,4 +34,18 @@ public final class UsuarioSpecification {
                     cb.like(cb.lower(root.get("apellido")), pattern));
         };
     }
+
+    // Método agregado para búsqueda general por término
+    public static Specification<Usuario> buscarPorTermino(String termino) {
+        return (root, query, cb) -> {
+            if (!StringUtils.hasText(termino)) {
+                return null;
+            }
+            String pattern = "%" + termino.toLowerCase() + "%";
+            return cb.or(
+                    cb.like(cb.lower(root.get("nombre")), pattern),
+                    cb.like(cb.lower(root.get("apellido")), pattern),
+                    cb.like(cb.lower(root.get("email")), pattern));
+        };
+    }
 }
