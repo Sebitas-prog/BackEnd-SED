@@ -33,4 +33,10 @@ public class TokenVerificacion extends AuditableEntity {
     public boolean estaVencido() {
         return LocalDateTime.now().isAfter(expiraEn);
     }
+
+    // Lombok genera automáticamente:
+    // - String getToken()
+    // - LocalDateTime getExpiraEn()
+    // - void setExpiraEn(LocalDateTime expiraEn)
+    // - Usuario getUsuario()
 }

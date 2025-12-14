@@ -25,4 +25,7 @@ public class Permiso extends AuditableEntity {
     @OneToMany(mappedBy = "permiso", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<RolPermiso> roles = new HashSet<>();
+
+    // Lombok genera automáticamente:
+    // - String getCodigo()
 }

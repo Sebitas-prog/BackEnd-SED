@@ -29,4 +29,8 @@ public class Rol extends AuditableEntity {
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<UsuarioRol> usuarios = new HashSet<>();
+
+    // Lombok genera automáticamente:
+    // - String getNombre()
+    // - Set<RolPermiso> getPermisos()
 }

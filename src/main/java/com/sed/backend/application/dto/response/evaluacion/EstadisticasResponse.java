@@ -1,12 +1,16 @@
 package com.sed.backend.application.dto.response.evaluacion;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EstadisticasResponse {
-    private final long totalEvaluaciones;
-    private final double promedioGeneral;
-    private final long evaluacionesAprobatorias;
+    private long totalEvaluaciones;
+    private double promedioGeneral;
+    private long evaluacionesAprobatorias;
 }

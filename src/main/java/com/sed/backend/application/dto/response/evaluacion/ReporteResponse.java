@@ -1,14 +1,18 @@
 package com.sed.backend.application.dto.response.evaluacion;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReporteResponse {
-    private final String titulo;
-    private final Map<String, Object> datos;
-    private final String generadoPor;
+    private String titulo;
+    private Map<String, Object> datos;
+    private String generadoPor;
 }

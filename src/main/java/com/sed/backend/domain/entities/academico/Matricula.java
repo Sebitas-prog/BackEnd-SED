@@ -25,4 +25,7 @@ public class Matricula extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
     private EstadoMatriculaEnum estado;
+
+    // Lombok genera automáticamente:
+    // - Seccion getSeccion() ← Este método ya existe gracias a @Getter
 }

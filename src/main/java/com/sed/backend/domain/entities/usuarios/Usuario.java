@@ -43,4 +43,9 @@ public class Usuario extends AuditableEntity {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<TokenVerificacion> tokens = new HashSet<>();
+
+    // Lombok genera automáticamente:
+    // - String getPassword()
+    // - void setPassword(String password)
+    // Con @Setter y @Getter
 }

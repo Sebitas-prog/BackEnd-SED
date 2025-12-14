@@ -32,4 +32,7 @@ public class Seccion extends AuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "docente_id")
     private Docente docente;
+
+    // Lombok genera automáticamente:
+    // - Periodo getPeriodo() ← Este método ya existe gracias a @Getter
 }

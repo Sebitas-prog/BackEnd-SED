@@ -27,4 +27,7 @@ public class SesionUsuario extends AuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    // Lombok genera automáticamente el Builder con todos los campos
+    // incluyendo usuario, ip, userAgent, ultimoAcceso
 }

@@ -1,16 +1,20 @@
 package com.sed.backend.application.dto.response.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageResponse<T> {
-    private final List<T> content;
-    private final long totalElements;
-    private final int totalPages;
-    private final int page;
-    private final int size;
+    private List<T> content;
+    private long totalElements;
+    private int totalPages;
+    private int page;
+    private int size;
 }

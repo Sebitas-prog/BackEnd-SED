@@ -1,12 +1,16 @@
 package com.sed.backend.application.dto.response.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ApiResponse<T> {
-    private final boolean success;
-    private final String message;
-    private final T data;
+    private boolean success;
+    private String message;
+    private T data;
 }

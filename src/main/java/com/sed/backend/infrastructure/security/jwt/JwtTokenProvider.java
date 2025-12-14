@@ -3,6 +3,7 @@ package com.sed.backend.infrastructure.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -24,10 +24,17 @@ public class JwtTokenProvider {
     private final long refreshTokenValidityMs;
 
     public JwtTokenProvider(
-            @Value("${security.jwt.secret:change-this-secret}") String secret,
+            @Value("${security.jwt.secret}") String secret,
             @Value("${security.jwt.access-token-validity-ms:900000}") long accessTokenValidityMs,
             @Value("${security.jwt.refresh-token-validity-ms:604800000}") long refreshTokenValidityMs) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+
+        if (keyBytes.length < 32) {
+            throw new IllegalArgumentException(
+                    "La clave JWT debe tener al menos 256 bits (32 bytes)");
+        }
+
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenValidityMs = accessTokenValidityMs;
         this.refreshTokenValidityMs = refreshTokenValidityMs;
     }

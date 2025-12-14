@@ -20,4 +20,7 @@ public class RolPermiso extends AuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "permiso_id", nullable = false)
     private Permiso permiso;
+
+    // Lombok genera automáticamente:
+    // - Permiso getPermiso()
 }

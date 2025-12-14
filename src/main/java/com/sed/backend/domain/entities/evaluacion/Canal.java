@@ -20,4 +20,7 @@ public class Canal extends AuditableEntity {
 
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
+
+    // Lombok genera automáticamente:
+    // - String getCodigo()
 }

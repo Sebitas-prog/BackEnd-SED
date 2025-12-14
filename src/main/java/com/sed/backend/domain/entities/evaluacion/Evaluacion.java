@@ -47,8 +47,15 @@ public class Evaluacion extends AuditableEntity {
     @Builder.Default
     private Set<Respuesta> respuestas = new HashSet<>();
 
-    // Método agregado para obtener el periodo desde la sección
+    // Método para obtener el periodo desde la sección
     public Periodo getPeriodo() {
         return seccion != null ? seccion.getPeriodo() : null;
     }
+
+    // Lombok genera automáticamente:
+    // - UUID getId()
+    // - Seccion getSeccion()
+    // - Matricula getMatricula()
+    // - EstadoEvaluacionEnum getEstado()
+    // - LocalDateTime getCreadoEn() (heredado de AuditableEntity)
 }
