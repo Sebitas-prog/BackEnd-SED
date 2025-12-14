@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PerformanceAspect {
 
-    @Around("within(com.sed.backend..*)")
+    @Around("within(com.sed.backend..*) && !within(org.springframework.web.filter.GenericFilterBean+) && !target(org.springframework.web.filter.GenericFilterBean+)")
     public Object measure(ProceedingJoinPoint pjp) throws Throwable {
         long start = System.currentTimeMillis();
         try {

@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Before("within(com.sed.backend..*)")
+    @Before("within(com.sed.backend..*) && !within(org.springframework.web.filter.GenericFilterBean+) && !target(org.springframework.web.filter.GenericFilterBean+)")
     public void logBefore(JoinPoint joinPoint) {
         log.info("Invocando {}", joinPoint.getSignature());
     }
 
-    @AfterReturning(pointcut = "within(com.sed.backend..*)", returning = "result")
+    @AfterReturning(pointcut = "within(com.sed.backend..*)&& !within(org.springframework.web.filter.GenericFilterBean+) && !target(org.springframework.web.filter.GenericFilterBean+)", returning = "result")
     public void logAfter(JoinPoint joinPoint, Object result) {
         log.info("Completado {} -> {}", joinPoint.getSignature(), result);
     }
