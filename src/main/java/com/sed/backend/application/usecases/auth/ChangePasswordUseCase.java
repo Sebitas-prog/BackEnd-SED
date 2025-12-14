@@ -17,14 +17,14 @@ public class ChangePasswordUseCase {
 
     @Transactional
     public void execute(ChangePasswordRequest request) {
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(request.getEmail())
+        Usuario usuario = usuarioRepository.findByCorreoIgnoreCase(request.getCorreo())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        if (!passwordEncoder.matches(request.getPasswordActual(), usuario.getPassword())) {
+        if (!passwordEncoder.matches(request.getPasswordActual(), usuario.getContrasenaHash())) {
             throw new IllegalArgumentException("La contraseña actual no es válida");
         }
 
-        usuario.setPassword(passwordEncoder.encode(request.getPasswordNueva()));
+        usuario.setContrasenaHash(passwordEncoder.encode(request.getPasswordNueva()));
         usuarioRepository.save(usuario);
     }
 }

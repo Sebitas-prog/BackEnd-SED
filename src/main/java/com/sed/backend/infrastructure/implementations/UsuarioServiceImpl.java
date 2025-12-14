@@ -26,9 +26,7 @@ public class UsuarioServiceImpl {
     public Usuario actualizarDatosBasicos(UUID usuarioId, Usuario cambios) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-        usuario.setNombre(cambios.getNombre());
-        usuario.setApellido(cambios.getApellido());
-        usuario.setTelefono(cambios.getTelefono());
+        usuario.setNombreCompleto(cambios.getNombreCompleto());
         return usuarioRepository.save(usuario);
     }
 }

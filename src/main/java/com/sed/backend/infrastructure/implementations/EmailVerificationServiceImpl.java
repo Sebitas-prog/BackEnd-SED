@@ -29,7 +29,7 @@ public class EmailVerificationServiceImpl {
 
         // COMENTAR TEMPORALMENTE PARA DESARROLLO
         System.out.println("=== TOKEN DE VERIFICACIÓN ===");
-        System.out.println("Email: " + usuario.getEmail());
+        System.out.println("Email: " + usuario.getCorreo());
         System.out.println("Token: " + token.getToken());
         System.out.println("============================");
 
@@ -53,4 +53,4 @@ public class EmailVerificationServiceImpl {
         tokenService.marcarComoUsado(token);
         tokenVerificacionRepository.deleteByUsuarioIdOrExpiraEnBefore(usuario.getId(), token.getExpiraEn());
     }
-};
+}

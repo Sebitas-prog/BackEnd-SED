@@ -15,7 +15,7 @@ public class LoginRequest {
 
     @Email
     @NotBlank
-    private String email;
+    private String correo;
 
     @NotBlank
     private String password;

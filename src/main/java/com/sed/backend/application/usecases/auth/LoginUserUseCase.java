@@ -16,8 +16,7 @@ public class LoginUserUseCase {
     @Transactional
     public AuthResponse execute(LoginRequest request) {
         String token = authService.iniciarSesion(
-                request.getEmail(), request.getPassword(), request.getIp(), request.getUserAgent());
-
+                request.getCorreo(), request.getPassword(), request.getIp(), request.getUserAgent());
         return AuthResponse.builder()
                 .token(token)
                 .refreshToken(null)

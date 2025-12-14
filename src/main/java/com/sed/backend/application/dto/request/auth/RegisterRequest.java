@@ -18,16 +18,19 @@ import lombok.Setter;
 public class RegisterRequest {
 
     @NotBlank
-    private String nombre;
-
-    @NotBlank
-    private String apellido;
+    private String nombreCompleto;
 
     @Email
     @NotBlank
-    private String email;
+    private String correo;
 
     @NotBlank
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
+    /**
+     * Rol requerido para crear el usuario. Valores permitidos: Estudiante, Docente
+     * o Comision.
+     */
+    @NotBlank(message = "El rol es obligatorio")
+    private String rol;
 }

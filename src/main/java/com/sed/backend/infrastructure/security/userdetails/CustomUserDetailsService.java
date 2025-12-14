@@ -1,5 +1,10 @@
 package com.sed.backend.infrastructure.security.userdetails;
 
+import com.sed.backend.domain.entities.usuarios.Permiso;
+import com.sed.backend.domain.entities.usuarios.Rol;
+import com.sed.backend.domain.entities.usuarios.Usuario;
+import com.sed.backend.domain.enums.EstadoUsuarioEnum;
+import com.sed.backend.infrastructure.persistence.repositories.UsuarioRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,11 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.sed.backend.domain.entities.usuarios.Permiso;
-import com.sed.backend.domain.entities.usuarios.Rol;
-import com.sed.backend.domain.entities.usuarios.Usuario;
-import com.sed.backend.domain.enums.EstadoUsuarioEnum;
-import com.sed.backend.infrastructure.persistence.repositories.UsuarioRepository;
 
 import java.util.Set;
 import java.util.UUID;
@@ -29,34 +29,40 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(username)
+        Usuario usuario = usuarioRepository.findByCorreoIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
         if (usuario.getEstado() == EstadoUsuarioEnum.PENDIENTE_VERIFICACION) {
             throw new UsernameNotFoundException("El usuario no ha verificado su correo");
         }
 
-        Set<SimpleGrantedAuthority> authorities = usuario.getRoles()
-                .stream()
+        Set<SimpleGrantedAuthority> authorities = usuario.getRoles().stream()
                 .map(usuarioRol -> usuarioRol.getRol())
                 .flatMap((Rol rol) -> {
-                    Set<SimpleGrantedAuthority> rolAuthorities = rol.getPermisos()
-                            .stream()
-                            .map(per -> per.getPermiso())
+                    Set<SimpleGrantedAuthority> rolAuthorities = rol.getPermisos().stream()
+                            .map(rp -> rp.getPermiso())
                             .map(Permiso::getCodigo)
                             .map(code -> new SimpleGrantedAuthority("PERM_" + code))
                             .collect(Collectors.toSet());
+
                     rolAuthorities.add(new SimpleGrantedAuthority("ROLE_" + rol.getNombre()));
                     return rolAuthorities.stream();
                 })
                 .collect(Collectors.toSet());
 
-        return new User(usuario.getEmail(), usuario.getPassword(), usuario.getEstado() == EstadoUsuarioEnum.ACTIVO,
-                true, true, true, authorities);
+        return new User(
+                usuario.getCorreo(),
+                usuario.getContrasenaHash(), // <-- OJO: corregido (sin ñ)
+                usuario.getEstado() == EstadoUsuarioEnum.ACTIVO,
+                true,
+                true,
+                true,
+                authorities);
     }
 
+    @Transactional(readOnly = true)
     public UUID resolveUserId(String email) {
-        return usuarioRepository.findByEmailIgnoreCase(email)
+        return usuarioRepository.findByCorreoIgnoreCase(email)
                 .map(Usuario::getId)
                 .orElse(null);
     }

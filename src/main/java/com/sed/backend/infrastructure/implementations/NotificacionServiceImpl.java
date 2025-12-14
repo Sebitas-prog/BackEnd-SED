@@ -21,11 +21,11 @@ public class NotificacionServiceImpl {
     public Notificacion registrar(Notificacion notificacion) {
         Notificacion guardada = notificacionRepository.save(notificacion);
         emailAdapter.enviarEmail(
-                guardada.getUsuario().getEmail(),
+                guardada.getUsuario().getCorreo(),
                 guardada.getTitulo(),
                 "notification",
                 Map.of(
-                        "usuario", guardada.getUsuario().getNombre(),
+                        "usuario", guardada.getUsuario().getNombreCompleto(),
                         "mensaje", guardada.getMensaje()));
         return guardada;
     }

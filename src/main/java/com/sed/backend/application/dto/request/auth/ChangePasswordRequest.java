@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ChangePasswordRequest {
 
     @NotBlank
-    private String email;
+    private String correo;
 
     @NotBlank
     private String passwordActual;

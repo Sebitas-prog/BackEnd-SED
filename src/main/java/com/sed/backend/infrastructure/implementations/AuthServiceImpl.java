@@ -34,10 +34,10 @@ public class AuthServiceImpl {
 
     @Transactional
     public Usuario registrarUsuario(Usuario usuario) {
-        if (usuarioRepository.existsByEmailIgnoreCase(usuario.getEmail())) {
+        if (usuarioRepository.existsByCorreoIgnoreCase(usuario.getCorreo())) {
             throw new IllegalArgumentException("El correo ya está registrado");
         }
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuario.setContrasenaHash(passwordEncoder.encode(usuario.getContrasenaHash()));
         usuario.setEstado(EstadoUsuarioEnum.ACTIVO); // ← AÑADIR ESTA LÍNEA
         return usuarioRepository.save(usuario);
     }
@@ -47,15 +47,15 @@ public class AuthServiceImpl {
      * usarse.
      */
     @Transactional
-    public String iniciarSesion(String email, String rawPassword, String ip, String userAgent) {
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
+    public String iniciarSesion(String correo, String rawPassword, String ip, String userAgent) {
+        Usuario usuario = usuarioRepository.findByCorreoIgnoreCase(correo)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario o contraseña incorrectos"));
 
-        if (!passwordEncoder.matches(rawPassword, usuario.getPassword())) {
+        if (!passwordEncoder.matches(rawPassword, usuario.getContrasenaHash())) {
             throw new IllegalArgumentException("Usuario o contraseña incorrectos");
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getCorreo());
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
 
