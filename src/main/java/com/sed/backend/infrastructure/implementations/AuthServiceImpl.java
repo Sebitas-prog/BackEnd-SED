@@ -38,12 +38,8 @@ public class AuthServiceImpl {
             throw new IllegalArgumentException("El correo ya está registrado");
         }
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuario.setEstado(EstadoUsuarioEnum.PENDIENTE_VERIFICACION);
+        usuario.setEstado(EstadoUsuarioEnum.ACTIVO); // ← AÑADIR ESTA LÍNEA
         return usuarioRepository.save(usuario);
-    }
-
-    public Optional<Usuario> buscarPorEmail(String email) {
-        return usuarioRepository.findByEmailIgnoreCase(email);
     }
 
     /**

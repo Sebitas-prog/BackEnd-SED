@@ -30,11 +30,13 @@ public class RegisterUserUseCase {
                 .apellido(request.getApellido())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .estado(EstadoUsuarioEnum.PENDIENTE_VERIFICACION)
+                .estado(EstadoUsuarioEnum.ACTIVO) // ← CAMBIAR AQUÍ
                 .build();
 
         Usuario registrado = authService.registrarUsuario(usuario);
-        emailVerificationService.enviarTokenVerificacion(registrado);
+
+        // COMENTAR TEMPORALMENTE para desarrollo
+        // emailVerificationService.enviarTokenVerificacion(registrado);
 
         return AuthResponse.builder()
                 .token(null)

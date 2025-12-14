@@ -27,11 +27,17 @@ public class EmailVerificationServiceImpl {
         TokenVerificacion token = tokenService.crearTokenVerificacion(
                 usuario, TipoTokenEnum.VERIFICACION_EMAIL, 60);
 
-        emailAdapter.enviarEmail(
-                usuario.getEmail(),
-                "Verifica tu correo",
-                "verification-email",
-                Map.of("token", token.getToken(), "usuario", usuario.getNombre()));
+        // COMENTAR TEMPORALMENTE PARA DESARROLLO
+        System.out.println("=== TOKEN DE VERIFICACIÓN ===");
+        System.out.println("Email: " + usuario.getEmail());
+        System.out.println("Token: " + token.getToken());
+        System.out.println("============================");
+
+        // emailAdapter.enviarEmail(
+        // usuario.getEmail(),
+        // "Verifica tu correo",
+        // "verification-email",
+        // Map.of("token", token.getToken(), "usuario", usuario.getNombre()));
     }
 
     @Transactional
