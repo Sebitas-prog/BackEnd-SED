@@ -14,11 +14,14 @@ import com.sed.backend.domain.entities.evaluacion.Instrumento;
 import com.sed.backend.domain.entities.evaluacion.Pregunta;
 import com.sed.backend.domain.entities.evaluacion.Respuesta;
 import com.sed.backend.domain.enums.EstadoEvaluacionEnum;
+import com.sed.backend.domain.entities.evaluacion.EvaluacionPendiente;
+import com.sed.backend.domain.enums.EstadoEvaluacionPendienteEnum;
 import com.sed.backend.infrastructure.implementations.EvaluacionServiceImpl;
 import com.sed.backend.infrastructure.implementations.InstrumentoServiceImpl;
 import com.sed.backend.infrastructure.persistence.repositories.CanalRepository;
 import com.sed.backend.infrastructure.persistence.repositories.MatriculaRepository;
 import com.sed.backend.infrastructure.persistence.repositories.PreguntaRepository;
+import com.sed.backend.infrastructure.persistence.repositories.EvaluacionPendienteRepository;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -35,12 +38,14 @@ public class CreateEvaluacionUseCase {
     private final CanalRepository canalRepository;
     private final PreguntaRepository preguntaRepository;
     private final EvaluacionValidator evaluacionValidator;
+    private final EvaluacionPendienteRepository evaluacionPendienteRepository;
 
     @Transactional
     public EvaluacionResponse execute(EvaluacionRequest request) {
         evaluacionValidator.validate(request);
 
         Matricula matricula = obtenerMatricula(request.getMatriculaId());
+        validarPeriodoYDuplicados(matricula);
         Instrumento instrumento = instrumentoService.obtenerPorId(request.getInstrumentoId());
         String canal = canalRepository.findByCodigoIgnoreCase("WEB")
                 .map(c -> c.getCodigo())
@@ -61,18 +66,18 @@ public class CreateEvaluacionUseCase {
         respuestas.forEach(r -> r.setEvaluacion(evaluacion));
 
         Evaluacion guardada = evaluacionService.registrar(evaluacion);
+        marcarPendienteComoCompletada(matricula.getId(), instrumento.getId());
         return EvaluacionMapper.toResponse(guardada);
     }
 
     private Matricula obtenerMatricula(UUID matriculaId) {
         return matriculaRepository.findById(matriculaId)
-                .orElseThrow(() -> new IllegalArgumentException("Matrícula no encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Matricula no encontrada"));
     }
 
     private Set<Respuesta> construirRespuestas(Iterable<RespuestaRequest> requests) {
         Set<Respuesta> respuestas = new HashSet<>();
         for (RespuestaRequest respuestaRequest : requests) {
-            // Buscar la pregunta en la base de datos en lugar de construirla
             Pregunta pregunta = preguntaRepository.findById(respuestaRequest.getPreguntaId())
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Pregunta no encontrada: " + respuestaRequest.getPreguntaId()));
@@ -85,5 +90,26 @@ public class CreateEvaluacionUseCase {
             respuestas.add(respuesta);
         }
         return respuestas;
+    }
+
+    private void validarPeriodoYDuplicados(Matricula matricula) {
+        var seccion = matricula.getSeccion();
+        var periodo = seccion.getPeriodo();
+        if (!periodo.getRangoFechas().estaActivo()) {
+            throw new IllegalArgumentException("El periodo no esta activo para evaluaciones");
+        }
+        boolean existe = evaluacionService.existeParaMatriculaYSeccion(matricula.getId(), seccion.getId());
+        if (existe) {
+            throw new IllegalArgumentException("Ya existe una evaluacion registrada para este curso");
+        }
+    }
+
+    private void marcarPendienteComoCompletada(UUID matriculaId, UUID instrumentoId) {
+        EvaluacionPendiente pendiente = evaluacionPendienteRepository.findFirstByMatricula_IdAndInstrumento_Id(matriculaId, instrumentoId);
+        if (pendiente != null) {
+            pendiente.setEstado(EstadoEvaluacionPendienteEnum.COMPLETADA);
+            pendiente.setCompletadoEn(LocalDateTime.now());
+            evaluacionPendienteRepository.save(pendiente);
+        }
     }
 }

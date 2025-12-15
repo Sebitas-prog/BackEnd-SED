@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.sed.backend.domain.entities.base.AuditableEntity;
 import com.sed.backend.domain.valueobjects.CodigoEstudiante;
+import com.sed.backend.domain.entities.usuarios.Usuario;
 
 @Getter
 @Setter
@@ -13,6 +14,10 @@ import com.sed.backend.domain.valueobjects.CodigoEstudiante;
 @Entity
 @Table(name = "estudiantes")
 public class Estudiante extends AuditableEntity {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    private Usuario usuario;
 
     @Column(name = "nombres", nullable = false)
     private String nombres;

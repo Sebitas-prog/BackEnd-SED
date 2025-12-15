@@ -10,4 +10,14 @@ public interface SeccionRepository extends JpaRepository<Seccion, UUID> {
     List<Seccion> findByPeriodoId(UUID periodoId);
 
     List<Seccion> findByDocenteId(UUID docenteId);
+
+    List<Seccion> findByDocenteIdAndPeriodoId(UUID docenteId, UUID periodoId);
+
+    List<Seccion> findByCursoIdAndPeriodoId(UUID cursoId, UUID periodoId);
+
+    void deleteByPeriodoId(UUID periodoId);
+
+    List<Seccion> findByInstrumento_Id(UUID instrumentoId);
+
+    void deleteByInstrumento_Id(UUID instrumentoId);
 }

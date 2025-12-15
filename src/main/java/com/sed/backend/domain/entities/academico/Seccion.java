@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.sed.backend.domain.entities.base.AuditableEntity;
 import com.sed.backend.domain.enums.ModalidadSeccionEnum;
+import com.sed.backend.domain.entities.evaluacion.Instrumento;
 
 @Getter
 @Setter
@@ -32,6 +33,10 @@ public class Seccion extends AuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "docente_id")
     private Docente docente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instrumento_id")
+    private Instrumento instrumento;
 
     // Lombok genera automáticamente:
     // - Periodo getPeriodo() ← Este método ya existe gracias a @Getter

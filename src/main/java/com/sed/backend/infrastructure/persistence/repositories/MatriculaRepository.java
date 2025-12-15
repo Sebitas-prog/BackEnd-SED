@@ -13,4 +13,10 @@ public interface MatriculaRepository extends JpaRepository<Matricula, UUID> {
     List<Matricula> findByEstudianteId(UUID estudianteId);
 
     List<Matricula> findByEstado(EstadoMatriculaEnum estado);
+
+    List<Matricula> findByEstudianteIdAndSeccion_Periodo_Id(UUID estudianteId, UUID periodoId);
+
+    long countBySeccionId(UUID seccionId);
+
+    boolean existsByEstudianteIdAndSeccionId(UUID estudianteId, UUID seccionId);
 }

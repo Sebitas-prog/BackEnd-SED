@@ -3,6 +3,7 @@ package com.sed.backend.domain.entities.evaluacion;
 import jakarta.persistence.*;
 import lombok.*;
 import com.sed.backend.domain.entities.base.AuditableEntity;
+import com.sed.backend.domain.entities.academico.Periodo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,10 @@ public class Instrumento extends AuditableEntity {
 
     @Column(name = "activo", nullable = false)
     private boolean activo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "periodo_id")
+    private Periodo periodo;
 
     @OneToMany(mappedBy = "instrumento", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

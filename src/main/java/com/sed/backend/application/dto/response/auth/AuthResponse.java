@@ -13,4 +13,7 @@ public class AuthResponse {
     private String token;
     private String refreshToken;
     private String tokenType;
+    private java.util.UUID usuarioId;
+    private java.util.UUID perfilId;
+    private String rol;
 }

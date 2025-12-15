@@ -27,4 +27,9 @@ public class EvaluacionServiceImpl {
         return evaluacionRepository.findAll(
                 EvaluacionSpecification.porPeriodo(periodoId), pageable);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existeParaMatriculaYSeccion(UUID matriculaId, UUID seccionId) {
+        return evaluacionRepository.existsByMatriculaIdAndSeccionId(matriculaId, seccionId);
+    }
 };

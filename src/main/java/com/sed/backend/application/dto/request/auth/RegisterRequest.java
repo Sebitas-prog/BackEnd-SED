@@ -18,7 +18,10 @@ import lombok.Setter;
 public class RegisterRequest {
 
     @NotBlank
-    private String nombreCompleto;
+    private String nombres;
+
+    @NotBlank
+    private String apellidos;
 
     @Email
     @NotBlank
@@ -33,4 +36,9 @@ public class RegisterRequest {
      */
     @NotBlank(message = "El rol es obligatorio")
     private String rol;
+
+    /**
+     * Código institucional (requerido para estudiante, opcional para docente).
+     */
+    private String codigo;
 }
