@@ -42,23 +42,57 @@ Paquetes (src/main/java/com/sed/backend):
 ## 🚀 Cómo correr (dev)
 Requisitos: JDK 17, Maven, PostgreSQL.
 
-1) Variables/`application.yml`:
+1) Variables/`.env`:
+
 ```
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/sed
-SPRING_DATASOURCE_USERNAME=postgres
-SPRING_DATASOURCE_PASSWORD=postgres
-JWT_SECRET=tu_secreto
-JWT_EXPIRATION=86400000
+APPLICATION_NAME=sed
+
+DB_URL=jdbc:postgresql://localhost:5432/{nombre-db-aqui}
+DB_USERNAME={usuario-postgres-aqui}
+DB_USER_PASSWORD={contraseña-usuario-postgres-aqui}
+
+JPA_HIBERNATE_DDL_AUTO=create-drop
+
+# JWT Secret - Debe ser Base64 y tener al menos 256 bits (32 bytes)
+# Este secret es SOLO para desarrollo - Cambia en producción
+security.jwt.secret={secret-aqui-256-bits}
+security.jwt.access-token-validity-ms=900000
+security.jwt.refresh-token-validity-ms=604800000
+
+# Configuracion de Redis
+REDIS_HOST={ip-redis-aqui}
+REDIS_PORT={puerto-redis-aqui}
 ```
+
 2) Migraciones: Flyway se ejecuta al iniciar; verifica `db/migration/V10__...`, `V11__...`, `V12__...`.
-3) Ejecutar:
+3) Tener `Redis` corriendo en tu máquina, para esto puedes usar `Docker`:
+
+```bash
+docker run -d -p 6379:6379 --name redis redis
+```
+
+Verifica:
+
+```bash
+docker ps
+```
+
+Prueba la conexión:
+
+```bash
+docker exec -it redis redis-cli
+ping
+# Debe responder: PONG
+```
+
+1) Ejecutar:
 ```bash
 mvn spring-boot:run
 # o
 mvn -DskipTests compile
 java -jar target/backend-0.0.1-SNAPSHOT.jar
 ```
-4) Salud: `GET http://localhost:8080/actuator/health`.
+1) Salud: `GET http://localhost:8080/actuator/health`.
 
 ---
 
